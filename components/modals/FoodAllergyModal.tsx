@@ -25,9 +25,11 @@ export function FoodAllergyModal({
   const [reactionDescription, setReactionDescription] = useState("");
 
   useEffect(() => {
-    if (isOpen) {
+    if (!isOpen) return;
+    const id = requestAnimationFrame(() => {
       setIntroducedDate(new Date().toISOString().split("T")[0]);
-    }
+    });
+    return () => cancelAnimationFrame(id);
   }, [isOpen]);
 
   if (!isOpen) return null;

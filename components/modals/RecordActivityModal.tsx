@@ -26,13 +26,15 @@ export function RecordActivityModal({
   const [notes, setNotes] = useState("");
 
   useEffect(() => {
-    if (isOpen) {
+    if (!isOpen) return;
+    const id = requestAnimationFrame(() => {
       const now = new Date();
       setDate(now.toISOString().split("T")[0]);
       setTime(
         `${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`
       );
-    }
+    });
+    return () => cancelAnimationFrame(id);
   }, [isOpen]);
 
   // Milk states

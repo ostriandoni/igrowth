@@ -1,0 +1,55 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    name: Lint, Typecheck & Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies from lockfile
+        run: npm ci
+
+      - name: Run ESLint
+        run: |
+          if ! npm run lint; then
+            echo "::error::ESLint gagal. Perbaiki error lint sebelum melakukan merge."
+            exit 1
+          fi
+
+      - name: Run TypeScript typecheck
+        run: |
+          if ! npm run typecheck; then
+            echo "::error::TypeScript typecheck gagal. Periksa error tipe data."
+            exit 1
+          fi
+
+      - name: Run production build
+        env:
+          # Nilai placeholder aman khusus untuk verifikasi kompilasi Next.js di CI.
+          # Jangan pernah mencetak atau mengekspos secret di log.
+          NEXT_PUBLIC_SUPABASE_URL: ${{ vars.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co' }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ vars.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder-anon-key-for-ci-build' }}
+        run: |
+          if ! npm run build; then
+            echo "::error::Next.js build gagal. Periksa log build di atas."
+            exit 1
+          fi

@@ -66,7 +66,10 @@ export function MpasiTab({
   const [todayIso, setTodayIso] = useState<string>(DEFAULT_CURRENT_DATE);
 
   useEffect(() => {
-    setTodayIso(new Date().toISOString().split("T")[0]);
+    const id = requestAnimationFrame(() => {
+      setTodayIso(new Date().toISOString().split("T")[0]);
+    });
+    return () => cancelAnimationFrame(id);
   }, []);
 
   const todayMeals = meals.filter((m) => m.date === todayIso);
@@ -200,7 +203,7 @@ export function MpasiTab({
                         </p>
                       )}
                       {meal.notes && (
-                        <p className="mt-1 text-[11px] text-[#869683] italic">"{meal.notes}"</p>
+                        <p className="mt-1 text-[11px] text-[#869683] italic">&ldquo;{meal.notes}&rdquo;</p>
                       )}
                     </div>
                     <button

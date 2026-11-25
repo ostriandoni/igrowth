@@ -197,7 +197,7 @@ export function MemoTab({
                     )}
                     {act.details.story && (
                       <p className="mt-1 text-xs text-[#4c5c49] italic bg-[#fbfdf9] p-2 rounded-lg border border-[#eaf0e6]">
-                        "{act.details.story}"
+                        &ldquo;{act.details.story}&rdquo;
                       </p>
                     )}
                     {act.notes && (

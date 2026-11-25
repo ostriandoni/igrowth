@@ -24,9 +24,11 @@ export function RecordGrowthModal({
   const [date, setDate] = useState(initialRecord?.date || DEFAULT_CURRENT_DATE);
 
   useEffect(() => {
-    if (isOpen && !initialRecord) {
+    if (!isOpen || initialRecord) return;
+    const id = requestAnimationFrame(() => {
       setDate(new Date().toISOString().split("T")[0]);
-    }
+    });
+    return () => cancelAnimationFrame(id);
   }, [isOpen, initialRecord]);
   const [weight, setWeight] = useState(initialRecord?.weight?.toString() || "");
   const [height, setHeight] = useState(initialRecord?.height?.toString() || "");

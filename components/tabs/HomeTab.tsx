@@ -41,7 +41,10 @@ export function HomeTab({
   const [currentDateIso, setCurrentDateIso] = useState<string>(DEFAULT_CURRENT_DATE);
 
   useEffect(() => {
-    setCurrentDateIso(new Date().toISOString().split("T")[0]);
+    const id = requestAnimationFrame(() => {
+      setCurrentDateIso(new Date().toISOString().split("T")[0]);
+    });
+    return () => cancelAnimationFrame(id);
   }, []);
 
   const age = calculateAge(child.birthDate, currentDateIso);

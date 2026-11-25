@@ -15,6 +15,8 @@ interface SettingsModalProps {
   onResetData: () => void;
   onExportData: () => void;
   onImportData: (jsonData: string) => boolean;
+  userEmail?: string;
+  onSignOut?: () => void;
 }
 
 export function SettingsModal({
@@ -28,6 +30,8 @@ export function SettingsModal({
   onResetData,
   onExportData,
   onImportData,
+  userEmail,
+  onSignOut,
 }: SettingsModalProps) {
   const [activeTab, setActiveTab] = useState<"profile" | "children" | "data" | "info">("profile");
 
@@ -500,6 +504,24 @@ export function SettingsModal({
                   />
                 </label>
               </div>
+
+              {userEmail && onSignOut && (
+                <div className="rounded-2xl border border-[#DCE4EE] bg-[#EAF0F6]/60 p-4">
+                  <h4 className="font-bold text-sm text-[#263746]">Akun Terhubung</h4>
+                  <p className="mt-1 text-xs text-[#738397]">
+                    Masuk sebagai <strong className="text-[#263746]">{userEmail}</strong>
+                  </p>
+                  <button
+                    onClick={() => {
+                      onSignOut();
+                      onClose();
+                    }}
+                    className="mt-3 rounded-xl border border-[#476B8E] bg-white px-4 py-2 text-xs font-semibold text-[#476B8E] hover:bg-[#EAF0F6] transition-all"
+                  >
+                    Keluar dari Akun
+                  </button>
+                </div>
+              )}
 
               <div className="rounded-2xl border border-red-200 bg-red-50/50 p-4">
                 <h4 className="font-bold text-sm text-red-700">Kembalikan ke Data Contoh</h4>
